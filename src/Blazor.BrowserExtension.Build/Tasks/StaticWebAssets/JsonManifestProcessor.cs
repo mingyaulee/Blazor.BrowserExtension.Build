@@ -63,7 +63,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
                         .Where(name =>
                             name.Equals("blazor.webassembly.js", StringComparison.OrdinalIgnoreCase) ||
                             (name.StartsWith("dotnet.", StringComparison.OrdinalIgnoreCase) && name.EndsWith(".js", StringComparison.OrdinalIgnoreCase))
-                        ) ?? Enumerable.Empty<string>();
+                        );
                     foreach (var replacedFile in replacedFiles)
                     {
                         frameworkChildren[replacedFile].Match!.Path = frameworkChildren[replacedFile].Match!.Path.Replace("_", "");
