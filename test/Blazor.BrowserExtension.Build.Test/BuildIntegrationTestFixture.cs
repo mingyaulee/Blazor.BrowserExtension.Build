@@ -3,12 +3,11 @@ using Blazor.BrowserExtension.Build.Test.Helpers;
 
 namespace Blazor.BrowserExtension.Build.Test
 {
-    public class BuildIntegrationTestFixture : IDisposable
+    public class BuildIntegrationTestFixture
     {
         private const string DotNetCommand = "dotnet";
         private readonly string rootTestDirectory;
         private readonly string rootSolutionDirectory;
-        private bool disposedValue;
 
         public BuildIntegrationTestFixture()
         {
@@ -25,18 +24,7 @@ namespace Blazor.BrowserExtension.Build.Test
             var assembly = Assembly.GetExecutingAssembly();
             var configuration = assembly.GetCustomAttribute<AssemblyConfigurationAttribute>().Configuration;
             CommandHelper.ExecuteCommandVoid(DotNetCommand, $"pack --no-build --no-restore --configuration {configuration}", rootSolutionDirectory);
-            try
-            {
-                CommandHelper.ExecuteCommandVoid(DotNetCommand, $"new install PackageOutput/Blazor.BrowserExtension.Template.1.0.0.nupkg", rootSolutionDirectory);
-            }
-            catch (Exception exception) when (exception.Message.Contains("already exists"))
-            {
-                // Ignore exception when template is already installed
-            }
         }
-
-        public void ExecuteDotnetCommand(string command)
-            => CommandHelper.ExecuteCommandVoid(DotNetCommand, command, Path.Combine(rootTestDirectory, "TestProjects"));
 
         public void ExecuteDotnetCommand(string command, string testProjectName)
             => CommandHelper.ExecuteCommandVoid(DotNetCommand, command, GetTestProjectDirectory(testProjectName));
@@ -86,25 +74,6 @@ namespace Blazor.BrowserExtension.Build.Test
             var extension = new WebDriverExtensionHelper();
             await extension.Load(copyToBinExtensionPath);
             return extension;
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    CommandHelper.ExecuteCommandVoid(DotNetCommand, $"new uninstall Blazor.BrowserExtension.Template", rootSolutionDirectory);
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

@@ -7,14 +7,6 @@
     <!-- Disable fingerprinting by default since all browser extension files are local and not cached -->
     <StaticWebAssetsFingerprintContent>false</StaticWebAssetsFingerprintContent>
     <WasmFingerprintAssets>false</WasmFingerprintAssets>
-    <BrowserExtensionBootstrap Condition="'$(BrowserExtensionBootstrap)' == ''">false</BrowserExtensionBootstrap>
-    <BuildBlazorToBrowserExtension Condition="'$(BuildBlazorToBrowserExtension)' == ''">true</BuildBlazorToBrowserExtension>
-    <PublishBlazorToBrowserExtension Condition="'$(PublishBlazorToBrowserExtension)' == ''">true</PublishBlazorToBrowserExtension>
-    <BrowserExtensionAssetsPath Condition="'$(BrowserExtensionAssetsPath)' == ''">wwwroot</BrowserExtensionAssetsPath>
-    <BrowserExtensionOutputPath Condition="'$(BrowserExtensionOutputPath)' == ''">browserextension</BrowserExtensionOutputPath>
-    <BrowserExtensionRoutingEntryFile Condition="'$(BrowserExtensionRoutingEntryFile)' == ''">index.html</BrowserExtensionRoutingEntryFile>
-    <BrowserExtensionEnableCompression Condition="'$(BrowserExtensionEnableCompression)' == ''">$(CompressionEnabled)</BrowserExtensionEnableCompression>
-    <BrowserExtensionEnableCompression Condition="'$(BrowserExtensionEnableCompression)' == ''">true</BrowserExtensionEnableCompression>
     <!-- Get the binary file based on the runtime type, net10.0 for dotnet build and net472 for VS build -->
     <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core'">net10.0</_BrowserExtensionBuildTaskFolder>
     <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core' AND '$(TargetFramework)' == 'net9.0'">ne9.0</_BrowserExtensionBuildTaskFolder>

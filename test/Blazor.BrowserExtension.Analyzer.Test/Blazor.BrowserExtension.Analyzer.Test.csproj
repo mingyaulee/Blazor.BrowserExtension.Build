@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Blazor.BrowserExtension\Blazor.BrowserExtension.csproj" />
     <ProjectReference Include="..\..\src\Blazor.BrowserExtension.Analyzer\Blazor.BrowserExtension.Analyzer.csproj" />
   </ItemGroup>
 

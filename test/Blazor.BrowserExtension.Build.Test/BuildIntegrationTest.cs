@@ -8,36 +8,9 @@ namespace Blazor.BrowserExtension.Build.Test
         private static BuildIntegrationTestFixture testFixture;
 
         [TestMethod]
-        public async Task TestNewProjectFromTemplate()
+        public async Task TestBuildExistingProject()
         {
-            var projectName = "NewBrowserExtensionProject";
-            var projectDirectory = testFixture.GetTestProjectDirectory(projectName);
-            testFixture.ExecuteDotnetCommand($"new browserext --name {projectName}");
-            try
-            {
-                testFixture.ExecuteDotnetRestoreCommand(projectName);
-                testFixture.ExecuteDotnetBuildCommand(projectName);
-                using (var extensionFromBuild = await testFixture.LoadExtensionBuildOutput(projectName))
-                {
-                    var pageContentFromBuild = await extensionFromBuild.GetContent("h1");
-                    pageContentFromBuild.ShouldBe("Hello, from Blazor.");
-                }
-
-                testFixture.ExecuteDotnetPublishCommand(projectName);
-                using var extensionFromPublish = await testFixture.LoadExtensionPublishOutput(projectName);
-                var pageContentFromPublish = await extensionFromPublish.GetContent("h1");
-                pageContentFromPublish.ShouldBe("Hello, from Blazor.");
-            }
-            finally
-            {
-                ResetDirectoryChanges(projectDirectory);
-            }
-        }
-
-        [TestMethod]
-        public async Task TestBootstrapExistingProject()
-        {
-            var projectName = "EmptyBlazorProject";
+            const string projectName = "ExistingExtensionProject";
             var projectDirectory = testFixture.GetTestProjectDirectory(projectName);
             try
             {
@@ -45,12 +18,10 @@ namespace Blazor.BrowserExtension.Build.Test
                 var projectFileContent = await File.ReadAllTextAsync(projectFile);
                 projectFileContent = projectFileContent
                     .Replace("[NetVersion]", CommonTestHelper.TargetFrameworkMajorVersion);
-                await File.WriteAllTextAsync(projectFile, projectFileContent);
-
+                await File.WriteAllTextAsync(projectFile, projectFileContent, TestContext.CancellationToken);
                 testFixture.ExecuteDotnetRestoreCommand(projectName);
                 testFixture.ExecuteDotnetBuildCommand(projectName);
-                projectFileContent = await File.ReadAllTextAsync(projectFile);
-                projectFileContent.ShouldNotContain("BrowserExtensionBootstrap");
+
                 using (var extensionFromBuild = await testFixture.LoadExtensionBuildOutput(projectName))
                 {
                     var pageContentFromBuild = await extensionFromBuild.GetContent("h1");
@@ -96,11 +67,6 @@ namespace Blazor.BrowserExtension.Build.Test
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext) => testFixture = new BuildIntegrationTestFixture();
 
-        [ClassCleanup]
-        public static void ClassCleanup()
-        {
-            testFixture?.Dispose();
-            testFixture = null;
-        }
+        public TestContext TestContext { get; set; }
     }
 }

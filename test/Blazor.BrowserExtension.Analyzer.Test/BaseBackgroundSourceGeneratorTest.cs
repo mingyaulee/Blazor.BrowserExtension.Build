@@ -14,14 +14,13 @@ namespace Blazor.BrowserExtension.Analyzer.Test
             test.TestState.ReferenceAssemblies = GetReferenceAssemblies()
                 .AddPackages([
                     new PackageIdentity("Microsoft.AspNetCore.Components.WebAssembly", $"{CommonTestHelper.TargetFrameworkMajorVersion}.0.0"),
-                    new PackageIdentity("WebExtensions.Net.Extensions.DependencyInjection", "5.0.0")
+                    new PackageIdentity("WebExtensions.Net", "5.0.0")
                 ]).AddAssemblies([
                     "Microsoft.AspNetCore.Components.WebAssembly",
-                    "WebExtensions.Net.Extensions.DependencyInjection",
-                    "Blazor.BrowserExtension",
+                    "WebExtensions.Net"
                 ]);
 
-            test.TestState.AdditionalReferences.Add(typeof(BackgroundWorkerBase).Assembly);
+            test.TestState.Sources.Add(("BackgroundWorkerRuntimeStubs.cs", ReadFromEmbeddedResource("BackgroundWorkerRuntimeStubs.cs")));
 
             var testName = GetType().Name;
             var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -34,7 +33,7 @@ namespace Blazor.BrowserExtension.Analyzer.Test
                 Directory.Delete(jsOutputDirectory, true);
             }
             Directory.CreateDirectory(jsOutputDirectory);
-            await File.WriteAllTextAsync(Path.Combine(testDirectory, $"{testName}.csproj"), string.Empty);
+            await File.WriteAllTextAsync(Path.Combine(testDirectory, $"{testName}.csproj"), string.Empty, TestContext.CancellationToken);
 
             var backgroundWorkerFile = ReadFromEmbeddedResource("BackgroundWorkerTemplate.cs")
                 .Replace("/* Main_Method_Body_Placeholder */", IndentContent(MainMethodBody, 12))
@@ -46,11 +45,11 @@ namespace Blazor.BrowserExtension.Analyzer.Test
                 .TrimEnd();
             test.TestState.GeneratedSources.Add((typeof(BackgroundSourceGenerator), "BackgroundWorker.generated.cs", expectedBackgroundWorkerGeneratedFile));
 
-            await test.RunAsync();
+            await test.RunAsync(TestContext.CancellationToken);
 
             var jsFile = Path.Combine(jsOutputDirectory, "BackgroundWorkerMain.generated.js");
             Assert.IsTrue(File.Exists(jsFile), $"File exists '{jsFile}'");
-            Assert.AreEqual(ExpectedBackgroundWorkerJs, (await File.ReadAllTextAsync(jsFile)).TrimEnd());
+            Assert.AreEqual(ExpectedBackgroundWorkerJs, (await File.ReadAllTextAsync(jsFile, TestContext.CancellationToken)).TrimEnd());
         }
 
         protected abstract string MainMethodBody { get; }
@@ -78,5 +77,7 @@ namespace Blazor.BrowserExtension.Analyzer.Test
                 targetFramework: CommonTestHelper.TargetFramework,
                 referenceAssemblyPackage: new PackageIdentity("Microsoft.NETCore.App.Ref", $"{CommonTestHelper.TargetFrameworkMajorVersion}.0.0"),
                 referenceAssemblyPath: Path.Combine("ref", CommonTestHelper.TargetFramework));
+
+        public required TestContext TestContext { get; set; }
     }
 }

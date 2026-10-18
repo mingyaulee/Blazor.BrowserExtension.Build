@@ -3,16 +3,8 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <ProjectIsInDocs Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)docs'))">true</ProjectIsInDocs>
     <ProjectIsInSrc Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)src'))">true</ProjectIsInSrc>
-    <ProjectIsInTemplate Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)template'))">true</ProjectIsInTemplate>
     <ProjectIsInTest Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)test'))">true</ProjectIsInTest>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(ProjectIsInDocs)' == 'true'">
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ProjectIsInSrc)' == 'true'">
@@ -29,20 +21,6 @@
     <NoWarn>NU1901;NU1902;NU1903;NU1904</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(ProjectIsInTemplate)' == 'true'">
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <IsPackable>true</IsPackable>
-    <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GenerateDependencyFile>false</GenerateDependencyFile>
-    <IsShippingPackage>true</IsShippingPackage>
-    <HasReferenceAssembly>false</HasReferenceAssembly>
-    <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll. -->
-    <NoPackageAnalysis>true</NoPackageAnalysis>
-    <PackageType>Template</PackageType>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(ProjectIsInTest)' == 'true'">
     <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
@@ -51,7 +29,7 @@
   <PropertyGroup Condition="'$(IsPackable)' == 'true'">
     <PackageOutputPath>$(MSBuildThisFileDirectory)PackageOutput</PackageOutputPath>
     <Authors>mingyaulee</Authors>
-    <RepositoryUrl>https://github.com/mingyaulee/Blazor.BrowserExtension</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mingyaulee/Blazor.BrowserExtension.Build</RepositoryUrl>
     <PackageTags>Blazor Browser Chrome Firefox Edge Extension Addons .Net</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>Icon.png</PackageIcon>

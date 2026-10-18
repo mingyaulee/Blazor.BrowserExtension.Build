@@ -30,8 +30,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore --configuration Debug
-    - name: Install Playwright Browsers
+    - name: Install Playwright browsers
       shell: powershell
-      run: .\test\Blazor.BrowserExtension.IntegrationTestRunner\bin\Debug\net${{ env.DOTNET_VERSION }}\playwright.ps1 install chromium --with-deps
+      run: .\test\Blazor.BrowserExtension.Build.Test\bin\Debug\net${{ env.DOTNET_VERSION }}\playwright.ps1 install chromium --with-deps
     - name: Run tests
       run: dotnet test --no-restore --no-build --configuration Debug
