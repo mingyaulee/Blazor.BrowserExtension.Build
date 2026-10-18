@@ -70,7 +70,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Create tag
       if: steps.tagExistsCheck.outputs.exists == 'false'
-      uses: negz/create-tag@v1
+      uses: negz/create-tag@v2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         version: v${{ needs.version.outputs.MajorMinorPatch }}
