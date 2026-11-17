@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <!-- Compression is supported from Blazor.BrowserExtension package, the build package does not have Brotli decode to load compressed files. -->
+    <CompressionEnabled>false</CompressionEnabled>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+    <StaticWebAssetSpaFallbackEnabled>true</StaticWebAssetSpaFallbackEnabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazor.BrowserExtension.Build" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="11.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Gateway" Version="11.0.0" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

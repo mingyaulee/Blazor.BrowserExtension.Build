@@ -8,28 +8,38 @@ namespace Blazor.BrowserExtension.Build.Test
         private static BuildIntegrationTestFixture testFixture;
 
         [TestMethod]
-        public async Task TestBuildExistingProject()
+        public Task TestBuildExistingProjectNet10()
         {
             const string projectName = "ExistingExtensionProject";
+            return TestBuildExistingProject(projectName , "net10.0");
+        }
+
+        [TestMethod]
+        public Task TestBuildExistingProjectNet11()
+        {
+            const string projectName = "ExistingExtensionProjectNet11";
+            return TestBuildExistingProject(projectName, "net11.0");
+        }
+
+        private async Task TestBuildExistingProject(string projectName, string targetFramework)
+        {
             var projectDirectory = testFixture.GetTestProjectDirectory(projectName);
             try
             {
                 var projectFile = Path.Combine(projectDirectory, projectName + ".csproj");
-                var projectFileContent = await File.ReadAllTextAsync(projectFile);
-                projectFileContent = projectFileContent
-                    .Replace("[NetVersion]", CommonTestHelper.TargetFrameworkMajorVersion);
+                var projectFileContent = await File.ReadAllTextAsync(projectFile, TestContext.CancellationToken);
                 await File.WriteAllTextAsync(projectFile, projectFileContent, TestContext.CancellationToken);
                 testFixture.ExecuteDotnetRestoreCommand(projectName);
                 testFixture.ExecuteDotnetBuildCommand(projectName);
 
-                using (var extensionFromBuild = await testFixture.LoadExtensionBuildOutput(projectName))
+                using (var extensionFromBuild = await testFixture.LoadExtensionBuildOutput(projectName, targetFramework))
                 {
                     var pageContentFromBuild = await extensionFromBuild.GetContent("h1");
                     pageContentFromBuild.ShouldBe("Hello, world!");
                 }
 
                 testFixture.ExecuteDotnetPublishCommand(projectName);
-                using var extensionFromPublish = await testFixture.LoadExtensionPublishOutput(projectName);
+                using var extensionFromPublish = await testFixture.LoadExtensionPublishOutput(projectName, targetFramework);
                 var pageContentFromPublish = await extensionFromPublish.GetContent("h1");
                 pageContentFromPublish.ShouldBe("Hello, world!");
             }

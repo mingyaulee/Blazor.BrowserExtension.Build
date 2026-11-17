@@ -3,15 +3,15 @@
   <PropertyGroup>
     <!-- Compression is supported from Blazor.BrowserExtension package, the build package does not have Brotli decode to load compressed files. -->
     <CompressionEnabled>false</CompressionEnabled>
-    <TargetFramework>net[NetVersion].0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Blazor.BrowserExtension.Build" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="[NetVersion].0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="[NetVersion].0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.0" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

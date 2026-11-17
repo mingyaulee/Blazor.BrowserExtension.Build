@@ -159,11 +159,6 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
                 return;
             }
 
-            if (match.Path.Replace('\\', '/').StartsWith(@"_framework/dotnet.", StringComparison.OrdinalIgnoreCase))
-            {
-                return;
-            }
-
             var contentFile = Path.Combine(contentRootPath, match.Path);
             var contentRelativeDirectory = Path.GetDirectoryName(contentRelativePath);
             AddOutput(contentFile, contentRelativeDirectory);
